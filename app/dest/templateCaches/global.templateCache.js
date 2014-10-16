@@ -1,0 +1,1 @@
+angular.module("sudoku.main.package").run(["$templateCache",function(a){a.put("/app/templates/global/main.html","")}]);

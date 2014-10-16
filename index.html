@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="sudoku.main.package">
+    <head>
+        <title ng-bind-html="{{pageTitle}}"></title>
+        <link rel="stylesheet" href="/css/dest/main.css" media="screen" charset="utf-8">
+    </head>
+    <body>
+        <div ng-cloak ng-controller="sudoku.gameboard.mainCtrl as gbc" class="main-board">
+            {{gbc.testBoard}}
+
+            <div class="choices">
+                <a href="#"
+                    ng-repeat="slot in gbc.standardSlot"
+                    ng-click="gameboardActions.setSlot(
+                        slot,
+                        gbc.fullBoard,
+                        gbc.boardData
+                    )">
+                     - {{slot}} -
+                </a>
+                {{gbc.slotSetterVal}}
+                <div>
+                    <input id="hiddenValueInput"
+                        type="number"
+                        ng-change="gameboardActions.textSetSlot(
+                            gbc.fullBoard,
+                            gbc.boardData
+                        )"
+                        ng-model="gbc.boardData.slotSetterVal"
+                        autofocus />
+                </div>
+            </div>
+            <table cellspacing="0">
+                <tbody>
+                    <tr ng-repeat="row in gbc.boardData.checkRows"
+                        ng-class="{
+                            third : $index % 3 === 0
+                        }">
+                        <td ng-repeat="col in row"
+                            class="
+                                row-{{$parent.$index}}
+                                col-{{$index}}
+                            "
+                            ng-class="{
+                                'selected-value' : col.selected,
+                                'empty-slot' : !col.showValue,
+                                'error' : col.hasError
+                            }"
+                            highlight-slots="{
+                                slot : col,
+                                fullBoard : gbc.fullBoard
+                            }"
+                            ng-click="gameboardActions.selectSlot(
+                                col,
+                                gbc.fullBoard,
+                                gbc.boardData
+                            )">
+                            {{
+                                col.showValue
+                                && col.slotValue
+                                || ''
+                            }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="/app/dest/vendorScripts.js"></script>
+        <script src="/app/dest/main.app.js"></script>
+        <script src="/app/dest/templateCaches/main.templateCache.js"></script>
+    </body>
+</html>
