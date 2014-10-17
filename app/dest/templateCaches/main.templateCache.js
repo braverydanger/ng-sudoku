@@ -1,1 +1,1 @@
-angular.module("sudoku.main.package").run(["$templateCache",function(a){a.put("/app/templates/global/main.html","<h1>{{this}}</h1>\n")}]);
+angular.module("sudoku.main.package").run(["$templateCache",function(a){a.put("/app/templates/C:/Users/njaqui001c/Desktop/node/ng-sudoku/ng-sudoku/app/templates/global/main.html","<h1>{{this}}</h1>\r\n")}]);
