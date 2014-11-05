@@ -1,3 +1,37 @@
+/*
+** A NOTE ABOUT SASS AND COMPASS **
+** For our current scss files to compile correctly, you must use the following versions:
+** SASS: 3.2.12
+** COMPASS: 0.12.2
+**
+** If you're getting weird errors during sass compilation and don't know why, check your versions.
+** sass -v
+** compass -v
+**
+*/
+
+//////////////////////////////
+// Imports
+//////////////////////////////
+
+@import "modules/foundation";
+@import "compass/css3";
+@import "modules/ceaser";
+@import "modules/mixins";
+@import "modules/fonts";
+@import "partials/reset";
+@import "partials/vars";
+@import "partials/base";
+@import "partials/category";
+@import "partials/brand";
+@import "partials/header";
+@import "partials/footer";
+@import "partials/help";
+@import "partials/opinionlab";
+@import "partials/uoonyou";
+
+
+
 * { display: none; }
 
 
