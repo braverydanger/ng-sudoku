@@ -15,8 +15,13 @@ var gulp = require('gulp'),
 var onlyScripts = function(name) {
     return /(\.(js)$)/i.test(path.extname(name));
 };
-//var taskDirs = ['app', 'js', 'css'];
-var taskDirs = ['app', 'js', 'css', 'sass'];
+
+var taskDirs = [
+    'app',
+    'js',
+    'css',
+    'sass'
+];
 for (var i = 0; i < taskDirs.length; i++) {
     var taskDir = './' + taskDirs[i] + '/gulptasks/';
     console.log('\n\nLooking for tasks in: ' + taskDir);
@@ -29,7 +34,8 @@ for (var i = 0; i < taskDirs.length; i++) {
     };
 };
 
-// Set up a simple task to use as a dependency for other tasks to be seen as defaults
+// Set up a simple task to use as a dependency
+// for other tasks to be seen as defaults
 gulp.task('is-default-task', function(){
     return true;
 });
@@ -48,7 +54,7 @@ var defaultTaskList = (function() {
     };
     return (function() {
         var taskArr = [];
-        for (task in gulp.tasks) {
+        for (var task in gulp.tasks) {
             if (
                 gulp.tasks.hasOwnProperty(task)
                 && gulp.tasks[task].dep.indexOf('is-default-task') > -1

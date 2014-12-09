@@ -1,1 +1,397 @@
-!function(e,r){"use strict";!function(){angular.module("sudoku.gameboard",["ngRoute","ngResource"])}(e,r),function(){function e(e,r,o,t){var a=this,n=o.makeBoard();return a.fullBoard=n.gameboard,a.standardSlot=o.standardSlot,a.boardData={current:!1,slotSetterVal:null,checkRows:n.checkers.rows,availableChoices:{}},e.gameboardActions=t,a}angular.module("sudoku.gameboard").controller("sudoku.gameboard.mainCtrl",e),e.$inject=["$scope","$timeout","gameboardCreator","gameboardActions"]}(e,r),function(e,r){function o(){var e=function(e,o){var t=r.querySelectorAll("td.row-"+o.row+", td.col-"+o.col);return angular.forEach(t,function(r){angular.element(r)[e?"addClass":"removeClass"]("highlight")}),!1};return{scope:{boardData:"=highlightSlots"},link:function(o,t){return t.bind("mouseover",function(){return e(!0,o.boardData.slot),!1}).bind("mouseout",function(){return e(!1,o.boardData.slot),!1}).bind("click",function(){r.getElementById("hiddenValueInput").focus()}),!1}}}angular.module("sudoku.gameboard").directive("highlightSlots",o)}(e,r),function(){function e(e){var r={};return r.selectSlot=function(e,r,o){console.log(o);for(var t=e.selected,a=0;a<r.length;a++)r[a].selected=e.showValue&&r[a].showValue&&r[a].slotValue===e.slotValue&&!r[a].selected;return e.selected=t||e.showValue?e.selected:!0,o.current=e.selected&&e.master>-1&&r[e.master],!1},r.setSlot=function(e,o,t){if(t.current)t.current.showValue?console.log("there's already a number there, doofus."):e===t.current.slotValue?(o[t.current.master].showValue=!0,o[t.current.master].selected=!1,t.current=!1):(r.showError(o[t.current.master],t),console.log("wrong number, guy."));else{var a={selected:!1,slotValue:e,showValue:!0,master:null};r.selectSlot(a,o,t)}return!1},r.textSetSlot=function(e,o){o.slotSetterVal=parseInt(o.slotSetterVal),o.slotSetterVal&&r.setSlot(o.slotSetterVal,e,o),o.slotSetterVal=null},r.showError=function(r){r.hasError=!0,e(function(){r.hasError=!1},1e3)},r}angular.module("sudoku.gameboard").factory("gameboardActions",e),e.$inject=["$timeout"]}(e,r),function(){function e(){var e={},r={},o=!1,t=3,a=t*t;return e.standardSlot=[1,2,3,4,5,6,7,8,9],e.emptyCheckers=function(){r={rows:[],cols:[],grid:[]};for(var e=0;a>e;e++)r.rows[e]=[],r.cols[e]=[],r.grid[e]=[]},e.possibleVals=function(o,t,n){for(var l=[],u=0;a>u;u++)r.rows[o].indexOf(e.standardSlot[u])<0&&r.cols[t].indexOf(e.standardSlot[u])<0&&r.grid[n].indexOf(e.standardSlot[u])<0&&l.push(e.standardSlot[u]);return l},e.createMasterGrid=function(){var r=[];e.emptyCheckers();for(var o=0;a>o;o++)for(var t=0;a>t;t++){var n={master:t+o*a,grid:3*Math.floor(o/3)+Math.floor(t/3),row:o,col:t};r.push(n)}return r},e.assignBoardToRows=function(e,r){for(var o=Math.floor(Math.sqrt(r.length)),t=0;t<r.length;t++){var a=Math.floor(t/o),n=t-a*o;e[a][n]=r[t]}return e},e.checkBoard=function(){for(var t=e.createMasterGrid(),a=0;a<t.length;a++){var n=t[a],l=e.possibleVals(n.row,n.col,n.grid),u=Math.floor(Math.random()*l.length),s=l[u];if(!l.length)return!1;r.rows[n.row].push(s),r.cols[n.col].push(s),r.grid[n.grid].push(s),n.slotValue=s,n.showValue=!1,n.gridIndex=a,n.selected=!1,n.hasError=!1,n.hasSuccess=!1}return o=!0,r.rows=e.assignBoardToRows(r.rows,t),{gameboard:t,checkers:r}},e.makeBoard=function(){var r;do r=e.checkBoard();while(!o);return o=!1,r.gameboard=e.removeSlots(r.gameboard),r},e.removeSlots=function(e){for(var r=0;r<e.length;r++){var o=Math.floor(2*Math.random())/10;o%r===0&&(e[r].showValue=!0)}return e},e}angular.module("sudoku.gameboard").factory("gameboardCreator",e)}(e,r),function(){function e(){var e={};return e.uniqueVals=function(e){var r={};return e.filter(function(e){return r.hasOwnProperty(e)?!1:r[e]=!0})},e}angular.module("sudoku.gameboard").factory("gameboardHelpers",e)}(e,r)}(window,document),angular.module("sudoku.main.package",["ngRoute","ngResource","sudoku.gameboard"]),document.onkeydown=function(e){var r=angular.element(document.documentElement).scope();switch(e.which){case 83:e.shiftKey&&e.ctrlKey&&console.log(r);break;case 67:e.shiftKey&&e.ctrlKey&&console.clear()}};
+/*********************************
+**	Module: gameboard
+*********************************/
+
+
+;(function(window, document, undefined) {
+'use strict';
+
+(function(window, document, undefined) {
+
+angular
+    .module(
+        'sudoku.gameboard',
+        ['ngRoute', 'ngResource']
+    )
+
+
+})(window, document);
+
+
+(function(window, document, undefined) {
+
+angular
+    .module('sudoku.gameboard')
+    .controller('sudoku.gameboard.mainCtrl', gameboardCtrl);
+
+
+gameboardCtrl.$inject = [
+    '$scope',
+    '$timeout',
+    'gameboardCreator',
+    'gameboardActions'
+];
+
+function gameboardCtrl(
+    $scope,
+    $timeout,
+    gameboardCreator,
+    gameboardActions
+) {
+
+    /*
+     * set vars
+     */
+    var vm = this; // View Model
+    var board = gameboardCreator.makeBoard();
+
+
+    /*
+     * set view model attachments
+     */
+    vm.fullBoard = board.gameboard;
+    vm.standardSlot = gameboardCreator.standardSlot;
+    vm.boardData = {
+        current : false,
+        slotSetterVal : null,
+        checkRows : board.checkers.rows,
+        availableChoices : {}
+    };
+
+    /*
+     * set $scope attachments
+     */
+    $scope.gameboardActions = gameboardActions;
+
+    return vm;
+}
+
+
+})(window, document);
+
+
+(function(window, document, undefined) {
+
+angular
+    .module('sudoku.gameboard')
+    .directive('highlightSlots', highlightSlots);
+
+
+/*
+ * Directive for highlighting the rows and columns on hover
+ */
+
+function highlightSlots() {
+    var highlightClass = "highlight";
+    var selectedClass = "selected-value"
+
+    var highlightRowsCols = function(isMouseover, boardData) {
+        var elementList = document.querySelectorAll('td.row-' + boardData.row +', td.col-' + boardData.col);
+        angular.forEach(elementList, function(val) {
+            angular.element(val)[isMouseover ? "addClass" : "removeClass"]("highlight");
+        })
+        return false;
+    };
+
+    var selectAllSameValues = function(slot, isAlreadySelected, fullBoard) {
+        var currentlySelected = document.querySelectorAll('td.' + selectedClass);
+        var elementList = document.querySelectorAll('td.value-' + slot.slotValue);
+        angular.forEach(currentlySelected, function(elem) {
+            angular.element(elem).removeClass(selectedClass);
+        });
+        if (!isAlreadySelected) {
+            angular.forEach(elementList, function(elem) {
+                if (fullBoard[slot.slotValue].showValue){
+                    angular.element(elem).addClass(selectedClass);
+                };
+            });
+        }
+
+    };
+
+    return {
+        scope : {
+            boardData : '=highlightSlots'
+        },
+        link : function(scope, elem, attrs) {
+            elem
+                .bind('mouseover', function() {
+                    highlightRowsCols(true, scope.boardData.slot);
+                    return false;
+                })
+                .bind('mouseout', function() {
+                    highlightRowsCols(false, scope.boardData.slot);
+                    return false;
+                })
+                .bind('click', function() {
+                    document.getElementById("hiddenValueInput").focus();
+                });
+            return false;
+        }
+    }
+}
+
+
+})(window, document);
+
+
+(function(window, document, undefined) {
+
+angular
+    .module('sudoku.gameboard')
+    .factory('gameboardActions', gameboardActions);
+
+
+gameboardActions.$inject = ['$timeout'];
+
+function gameboardActions($timeout) {
+
+    var _self = {};
+
+    _self.selectSlot = function(slotData, fullBoard, boardData) {
+        console.log(boardData);
+        var wasSelected = slotData.selected;
+        for (var i = 0; i < fullBoard.length; i++) {
+            fullBoard[i].selected =
+                (
+                    slotData.showValue
+                    && fullBoard[i].showValue
+                    && (fullBoard[i].slotValue === slotData.slotValue)
+                )
+                && !fullBoard[i].selected;
+        };
+
+        slotData.selected = !wasSelected && !slotData.showValue ? true : slotData.selected;
+        boardData.current = slotData.selected && slotData.master > -1 && fullBoard[slotData.master];
+
+        return false;
+    };
+
+
+    _self.setSlot = function(slotValue, fullBoard, boardData) {
+        if (boardData.current) {
+            if (boardData.current.showValue) {
+                console.log("there's already a number there, doofus.")
+            } else {
+                if (slotValue === boardData.current.slotValue) {
+                    fullBoard[boardData.current.master].showValue = true;
+                    fullBoard[boardData.current.master].selected = false;
+                    boardData.current = false;
+                    // now show some kind of success message!
+                } else {
+                    _self.showError(fullBoard[boardData.current.master], boardData)
+                    console.log("wrong number, guy.")
+                }
+            }
+        } else {
+            var slotData = {
+                selected : false,
+                slotValue : slotValue,
+                showValue : true,
+                master : null
+            };
+            _self.selectSlot(slotData, fullBoard, boardData);
+        }
+
+        return false;
+    };
+
+    _self.textSetSlot = function(fullBoard, boardData) {
+        boardData.slotSetterVal = parseInt(boardData.slotSetterVal);
+        if (boardData.slotSetterVal) {
+            _self.setSlot(boardData.slotSetterVal, fullBoard, boardData);
+        }
+        boardData.slotSetterVal = null;
+    }
+
+    _self.showError = function(slot, boardData) {
+        slot.hasError = true;
+        $timeout(function() {
+            slot.hasError = false;
+        }, 1000)
+    }
+
+    return _self;
+};
+
+
+})(window, document);
+
+
+(function(window, document, undefined) {
+
+angular
+    .module('sudoku.gameboard')
+    .factory('gameboardCreator', gameboardCreator);
+
+
+function gameboardCreator() {
+
+    var _self = {};
+    var checkers = {};
+    var boardReady = false;
+
+    var gridLength = 3
+    var masterGrid = gridLength*gridLength;
+
+    _self.standardSlot = [1,2,3,4,5,6,7,8,9];
+
+    _self.emptyCheckers = function() {
+        checkers = {
+            rows : [],
+            cols : [],
+            grid : []
+        };
+        for (var i = 0; i < masterGrid; i++) {
+            checkers.rows[i] = [];
+            checkers.cols[i] = [];
+            checkers.grid[i] = [];
+        };
+    }
+
+    _self.possibleVals = function(x, y, gridSlot) {
+        var retArray = [];
+        for (var i = 0; i < masterGrid; i++) {
+            if (
+                checkers.rows[x].indexOf(_self.standardSlot[i]) < 0
+                && checkers.cols[y].indexOf(_self.standardSlot[i]) < 0
+                && checkers.grid[gridSlot].indexOf(_self.standardSlot[i]) < 0
+            ) {
+                retArray.push(_self.standardSlot[i]);
+            }
+        }
+        return retArray;
+    };
+
+    _self.createMasterGrid = function() {
+        var retBoard = [];
+        _self.emptyCheckers();
+
+        for (var i = 0; i < masterGrid; i++) {
+            for (var ii = 0; ii < masterGrid; ii++) {
+                var slotObj = {
+                    master : ii + (i * masterGrid),
+                    grid : Math.floor(i/3)*3 + Math.floor(ii/3),
+                    row : i,
+                    col : ii
+                };
+                retBoard.push(slotObj);
+            };
+        };
+        return retBoard;
+    };
+
+    _self.assignBoardToRows = function(rows, gameboard) {
+        var reducer = Math.floor(Math.sqrt(gameboard.length));
+        for (var i = 0; i < gameboard.length; i++) {
+            var singleRow = Math.floor(i/reducer);
+            var singleCol = i - (singleRow * reducer);
+            rows[singleRow][singleCol] = gameboard[i];
+        }
+        return rows;
+    };
+
+    _self.checkBoard = function() {
+        var gameboard = _self.createMasterGrid();
+        for (var i = 0; i < gameboard.length; i++) {
+            var fb = gameboard[i];
+            var pVals = _self.possibleVals(fb.row, fb.col, fb.grid);
+            var rando = Math.floor(Math.random()*pVals.length);
+            var slotVal = pVals[rando];
+            if (!pVals.length) {
+                return false;
+            } else {
+                checkers.rows[fb.row].push(slotVal);
+                checkers.cols[fb.col].push(slotVal);
+                checkers.grid[fb.grid].push(slotVal);
+                fb.slotValue = slotVal;
+                fb.showValue = false;
+                fb.gridIndex = i;
+                fb.selected = false;
+                fb.hasError = false;
+                fb.hasSuccess = false;
+            }
+        };
+        boardReady = true;
+        checkers.rows = _self.assignBoardToRows(checkers.rows, gameboard);
+        return {
+            gameboard : gameboard,
+            checkers : checkers
+        };
+    };
+
+    _self.makeBoard = function(callback) {
+        var retBoard;
+        do {
+            retBoard = _self.checkBoard();
+        } while (!boardReady);
+
+        boardReady = false;
+        retBoard.gameboard = _self.removeSlots(retBoard.gameboard);
+        return retBoard;
+    };
+
+    _self.removeSlots = function(gameboard) {
+        for (var i = 0; i < gameboard.length; i++) {
+            var rando = Math.floor(Math.random()*2)/10;
+            if (rando % i === 0) {
+                gameboard[i].showValue = true;
+            }
+        };
+        return gameboard;
+    }
+
+    return _self;
+};
+
+
+})(window, document);
+
+
+(function(window, document, undefined) {
+
+angular
+    .module('sudoku.gameboard')
+    .factory('gameboardHelpers', gameboardHelpers);
+
+
+function gameboardHelpers() {
+
+    var _self = {};
+
+    _self.uniqueVals = function(a) {
+        var seen = {};
+        return a.filter(function(item) {
+            return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+        });
+    }
+
+    return _self;
+};
+
+
+})(window, document);
+
+})(window, document);
+
+angular
+.module(
+    'sudoku.main.package',
+    [
+        'ngRoute',
+        'ngResource',
+        'sudoku.gameboard'
+    ]
+)
+
+document.onkeydown = function(event){
+    var scope = angular.element(document.documentElement).scope()
+	switch (event.which) {
+	case 83 :
+			event.shiftKey && event.ctrlKey && console.log(scope)
+		break;
+	case 67 :
+			event.shiftKey && event.ctrlKey && console.clear()
+		break;
+	}
+}

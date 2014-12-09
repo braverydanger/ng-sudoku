@@ -48,8 +48,9 @@ gulp.task(
  * Clean on up
  ***************************************/
 function cleanCss(){
-    return gulp.src('build/css/')
-        .pipe(clean());
+    // return gulp.src('build/css/')
+    //     .pipe(clean());
+    return true;
 };
 
 /****************************************
@@ -57,8 +58,7 @@ function cleanCss(){
  ***************************************/
 function getSassy() {
     var mainTask = function() {
-        console.log("here")
-        return gulp.src(['sass/**/*.scss'])
+        return gulp.src(['sass/*.scss'])
             //.pipe(sass()) // use npm's default sass compiler; super fast!
             .pipe(compass({ // we need to use compass because of our foundation dependency
                 config_file: 'config.rb', // tells compass to include singulary
@@ -68,7 +68,6 @@ function getSassy() {
             .pipe(gulpif(isProd, minifycss()))
             .pipe(rename({suffix: '.min'}))
             .pipe(gulp.dest('build'))
-            .pipe(livereload())
             .pipe(notify({
                 message: 'Sass compiled!'
             }));
