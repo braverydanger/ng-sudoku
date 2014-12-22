@@ -1,9 +1,58 @@
-/* line 1, ../../../sass/src/main.scss */
+/*
+** A NOTE ABOUT SASS AND COMPASS **
+** For our current scss files to compile correctly, you must use the following versions:
+** SASS: 3.2.12
+** COMPASS: 0.12.2
+**
+** If you're getting weird errors during sass compilation and don't know why, check your versions.
+** sass -v
+** compass -v
+**
+*/
+/* line 19, ../../../sass/src/main.scss */
 * {
   display: none;
 }
 
-/* line 4, ../../../sass/src/main.scss */
+/* line 22, ../../../sass/src/main.scss */
 h1 {
+  display: block;
+  padding: 0;
+  margin: 0 -0.625rem;
   font-size: 500px;
+}
+/* line 163, ../../../sass/src/lib/foundation/components/_global.scss */
+h1:before, h1:after {
+  content: " ";
+  display: table;
+}
+/* line 164, ../../../sass/src/lib/foundation/components/_global.scss */
+h1:after {
+  clear: both;
+}
+/* line 50, ../../../sass/src/lib/foundation/components/_block-grid.scss */
+h1 > li {
+  display: block;
+  height: auto;
+  float: left;
+  padding: 0 0.625rem 1.25rem;
+}
+/* line 61, ../../../sass/src/lib/foundation/components/_block-grid.scss */
+h1 > li {
+  width: 33.33333%;
+  padding: 0 0.625rem 1.25rem;
+  list-style: none;
+}
+/* line 68, ../../../sass/src/lib/foundation/components/_block-grid.scss */
+h1 > li:nth-of-type(n) {
+  clear: none;
+}
+/* line 69, ../../../sass/src/lib/foundation/components/_block-grid.scss */
+h1 > li:nth-of-type(3n+1) {
+  clear: both;
+}
+
+/* line 28, ../../../sass/src/main.scss */
+p {
+  display: block;
 }

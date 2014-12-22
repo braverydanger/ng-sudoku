@@ -1,0 +1,1 @@
+*{display:none}h1{display:block;padding:0;margin:0 -.625rem;font-size:500px}h1:after,h1:before{content:" ";display:table}h1:after{clear:both}h1>li{display:block;height:auto;float:left;width:33.33333%;padding:0 .625rem 1.25rem;list-style:none}h1>li:nth-of-type(n){clear:none}h1>li:nth-of-type(3n+1){clear:both}p{display:none}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sudoku Test</title>
+    </head>
+    <body>
+        <div></div>
+        <script>
+            (function(window, document, undefined) {
+
+                var gameBoard = function() {
+                    var _self = this;
+
+                    _self.boardIsReady = false;
+                    _self.masterGrid = 9;
+                    //locals
+
+                    var Slot = function(m, g, c, r) {
+                        this.publicVals = {
+                            grid : g || 0,
+                            row : r || 0,
+                            col : c || 0,
+                            master : m || 0,
+                            val : 0
+                        }
+
+                    };
+
+                    var masterGrid = function() {
+                        var retBoard = [];
+                        var mg = _self.masterGrid;
+                        var reducer = Math.sqrt(mg);
+                        for (var i = 0; i < mg*mg; i++) {
+                            var s = new Slot(i);
+                            s.publicVals.row = Math.floor(i/_self.masterGrid);
+                            s.publicVals.col = Math.floor(i-(s.publicVals.row*mg));
+                            s.publicVals.grid = Math.floor(s.publicVals.col/(mg/reducer))
+                                + (Math.floor(s.publicVals.row/(mg/reducer))*reducer);
+                            retBoard.push(s);
+                        };
+                        return retBoard;
+                    };
+
+                    _self.newBoard = new masterGrid();
+                    return _self;
+                };
+
+                var theGame = new gameBoard();
+
+                console.log(theGame.newBoard)
+
+
+            })(window, document);
+        </script>
+    </body>
+</html>

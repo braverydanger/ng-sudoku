@@ -14,25 +14,17 @@
 // Imports
 //////////////////////////////
 
-@import "modules/foundation";
-@import "compass/css3";
-@import "modules/ceaser";
-@import "modules/mixins";
-@import "modules/fonts";
-@import "partials/reset";
-@import "partials/vars";
-@import "partials/base";
-@import "partials/category";
-@import "partials/brand";
-@import "partials/header";
-@import "partials/footer";
-@import "partials/help";
-@import "partials/opinionlab";
-@import "partials/uoonyou";
-
-
+@import "lib/foundation";
 
 * { display: none; }
 
 
-h1 { font-size: 500px; }
+h1 {
+    @include block-grid(3);
+    font-size: 500px;
+}
+
+
+p {
+    display: block;
+}

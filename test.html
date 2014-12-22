@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sudoku Test</title>
+        <style>
+            div { max-width: 500px; margin: 1em auto; text-align: center; }
+            span { display: inline-block; width: 2em; text-align: center; height: 2em; cursor: pointer; line-height: 2em; }
+
+            span.slot { }
+            span.slot.highlighted { background: rgba(200, 200, 50, 0.5); }
+            span.slot.selected { background: yellow; }
+            span.slot.error { background: red; }
+
+            #gameboard span { border: #aaa 1px solid; }
+            #gameboard span.pipe { border-color: #999; width: 1px; background: #666; }
+            #gameboard hr { margin: 0 auto; }
+
+            #gameboard2 { border-top: #9c9c9c 1px solid; border-bottom: #9c9c9c 1px solid; margin: 2em auto; }
+            #gameboard2 span { border-right: #9c9c9c 1px solid; padding: .35em; }
+            #gameboard2 span:first-child { border-left: #9c9c9c 1px solid; }
+            #gameboard2 span:hover { background: rgba(200, 100, 255, 0.4); }
+            #gameboard2 span.unavailable { background: rgba(200, 200, 205, 0.4); opacity: 0.5; cursor: default;  }
+        </style>
+    </head>
+    <body>
+        <div id="gameboard"></div>
+        <div id="gameboard2"></div>
+        <script src="/js/dest/gameboard.js"></script>
+    </body>
+</html>
